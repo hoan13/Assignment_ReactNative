@@ -25,21 +25,6 @@ const Data_Following = [
 const ListUserFollowingScreen = () => {
   const [followingList, setFollowingList] = useState(Data_Following);
 
-  const toggleFollowing = (userId) => {
-    const updatedFollowingList = followingList.map((user) => {
-      if (user.user.idUser === userId) {
-        // So sánh trực tiếp với userId
-        return {
-          ...user,
-          isFollowing: !user.isFollowing,
-        };
-      }
-      return user;
-    });
-
-    setFollowingList(updatedFollowingList);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -103,3 +88,97 @@ const styles = StyleSheet.create({
 });
 
 export default ListUserFollowingScreen;
+
+
+// import React, { useState } from "react";
+// import {
+//   SafeAreaView,
+//   View,
+//   Text,
+//   FlatList,
+//   StyleSheet,
+//   TouchableOpacity,
+//   Image,
+//   TextInput,
+// } from "react-native";
+// import Ionicons from "react-native-vector-icons/Ionicons";
+// // ... dữ liệu ...
+
+// const ListUserFollowingScreen = () => {
+//   const [followingList, setFollowingList] = useState(Data_Following);
+//   const [searchText, setSearchText] = useState("");
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <View style={styles.searchBar}>
+//         <TextInput
+//           style={styles.searchInput}
+//           value={searchText}
+//           onChangeText={setSearchText}
+//           placeholder="Tìm kiếm"
+//         />
+//         <TouchableOpacity>
+//           <Image
+//             source={require("../assets/search_FILL0_wght400_GRAD0_opsz24.png")}
+//             style={styles.searchIcon}
+//           />
+//         </TouchableOpacity>
+//       </View>
+//       <View style={styles.tabs}>
+//         <Text style={styles.tab}>Danh sách bạn bè</Text>
+//         <Text style={styles.tab}>Gợi ý</Text>
+//       </View>
+//       {/* Danh sách bạn bè */}
+//       <FlatList
+//         data={followingList}
+//         renderItem={({ item: followingUser }) => (
+//           // ... cell ...
+//           <View></View>
+//         )}
+//         keyExtractor={(item, index) => index.toString()}
+//       />
+//       {/* Gợi ý */}
+//       <FlatList
+//         data={suggestedUsers}
+//         renderItem={({ item: suggestedUser }) => <View></View>}
+//         keyExtractor={(item, index) => index.toString()}
+//       />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   searchBar: {
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     margin: 10,
+//   },
+//   searchInput: {
+//     flex: 1,
+//     borderColor: "gray",
+//     borderWidth: 1,
+//     borderRadius: 10,
+//     padding: 5,
+//     marginRight: 10,
+//   },
+//   searchIcon: {
+//     width: 30,
+//     height: 30,
+//   },
+//   tabs: {
+//     flexDirection: "row",
+//     justifyContent: "space-around",
+//     marginVertical: 10,
+//   },
+//   tab: {
+//     fontSize: 20,
+//     color: "blue",
+//   },
+//   // ... các phong cách khác ...
+// });
+
+// export default ListUserFollowingScreen;

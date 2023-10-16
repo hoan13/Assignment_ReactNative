@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import * as Progress from "react-native-progress";
 import React, { useState } from "react";
 import {
   View,
@@ -8,20 +9,70 @@ import {
   ImageBackground,
   StyleSheet,
   Image,
+  Alert,
   TouchableOpacity,
 } from "react-native";
 
-const RegisterScreen = () => {
-  const navigation = useNavigation();
-  const [name, setname] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-const [security, setSecurity] = useState(true);
-  const handleLogin = () => {
-    navigation.navigate("Login");
-  };
+  
 
+const RegisterScreen = () => {
+const navigation = useNavigation();
+const [name, setname] = useState("");
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [password2, setPassword2] = useState("");
+const [security, setSecurity] = useState(true);
+const [isLoading, setIsLoading] = useState(false);
+const handleLogin = () => {
+  navigation.goBack();
+};
+const URL_API = "https://652670e2917d673fd76c44ab.mockapi.io/api/users";
+const handleRegister = () => {
+  if (!name || !username || !password || !password2) {
+    Alert.alert("Thông báo,Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  if (!emailPattern.test(username)) {
+    Alert.alert("Tên tài khoản phải là một địa chỉ email hợp lệ!");
+    return;
+  }
+
+  if (password !== password2) {
+    Alert.alert("Thông báo,Mật khẩu không khớp!");
+    return;
+  }
+  setIsLoading(true);
+
+  fetch(URL_API)
+    .then((response) => response.json())
+    .then((data) => {
+      var exists = data.some((user) => user.username === username);
+      if (exists) {
+        Alert.alert("Thông báo,Tên tài khoản đã tồn tại!");
+      } else {
+        fetch(URL_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, username, password,admin:false }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+                    setUsername("");
+                    setname("");
+                    setPassword("");
+                    setPassword2("");
+                    setIsLoading(false);
+            Alert.alert("Thông báo,Đăng ký thành công!");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    });
+};
   return (
     <ImageBackground
       source={require("../assets/anh-nen-mau-xanh-001.jpeg")}
@@ -29,12 +80,16 @@ const [security, setSecurity] = useState(true);
     >
       <View style={styles.container}>
         <Text style={styles.title}>Đăng Ký Tài Khoản </Text>
+        {isLoading ? (
+          <Progress.CircleSnail color={["blue", "green", "red"]} />
+        ) : null}
 
         <View style={styles.inputcontainer}>
           <Text style={{ margin: 5 }}>Tên </Text>
           <TextInput
             style={styles.textInput}
             placeholder="Nhập tên "
+            value={name}
             onChangeText={(text) => setname(text)}
           />
         </View>
@@ -44,6 +99,7 @@ const [security, setSecurity] = useState(true);
           <TextInput
             style={styles.textInput}
             placeholder="Nhập tên tài khoản"
+            value={username}
             onChangeText={(text) => setUsername(text)}
           />
         </View>
@@ -115,10 +171,9 @@ const [security, setSecurity] = useState(true);
             <Image />
           </TouchableOpacity>
         </View>
-
         <TouchableOpacity
           title="Đăng ký"
-          onPress={() => {}}
+          onPress={handleRegister}
           style={styles.button}
         >
           <Text style={styles.textButton}> Đăng Ký</Text>

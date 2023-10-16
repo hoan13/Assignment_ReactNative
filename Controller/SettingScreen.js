@@ -8,25 +8,34 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const SettingsScreen = ({}) => {
+const SettingsScreen = ({ navigation, route }) => {
+    const user = route.params && route.params.user ? route.params.user : {};
+    const { avatar, name, username, id_user } = user;
+    console.log("ten: "+ name + 'avatar :'+avatar);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
         <Image
           style={styles.profileImage}
-          source={require("../assets/anh_nen_ng.png")}
+          source={{ uri: avatar }}
+          onPress={() => navigation.replace("Login")}
         />
-        <Text style={styles.profileName}>Admin</Text>
+        <Text style={styles.profileName}>{name}</Text>
       </View>
 
       <View style={styles.caidat}>
-        <TouchableOpacity style={styles.logoutButton} onPress={{}}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate("DoiMK")}
+        >
           <Text style={styles.logoutButtonText}>đổi mật khẩu </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.dangxuatbtn}>
-        <TouchableOpacity style={styles.logoutButton} onPress={{}}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+        >
           <Text style={styles.logoutButtonText}>Đăng Xuất</Text>
         </TouchableOpacity>
       </View>

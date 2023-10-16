@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, FlatList, StyleSheet } from "react-native";
 
-const Notification = () => {
-  const [notifications, setNotifications] = useState([]);
+const Notification = ({route}) => {
+const URL_API = "https://6528e7f6931d71583df28f2f.mockapi.io/api/tk";
+
+  const user = route.params && route.params.user ? route.params.user : {};
+  const { avatar, name, username, id_user } = user;
+
+  const [data, setData] = useState([]);
+
+  const getNoti = async () => {
+    try {
+      const response = await fetch(URL_API);
+
+      const json = await response.json();
+      setData(json.filter((item) => item.name !== name));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    // Simulate fetching notifications from an API or storage
-    const fetchedNotifications = [
-      { id: 1, message: "Có bài viết mới từ User1" },
-      { id: 2, message: "Có bài viết mới từ User2" },
-      { id: 3, message: "Có bài viết mới từ User1" },
-      // Add more notifications here
-    ];
-
-    setNotifications(fetchedNotifications);
+    getNoti();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={notifications}
+        data={data}
         renderItem={({ item }) => (
           <View style={styles.notificationItem}>
-            <Text style={styles.notificationText}>{item.message}</Text>
+            <Text style={styles.notificationText}>{item.name} vừa thêm bài viết mới</Text>
           </View>
         )}
-        keyExtractor={(item) => item.id.toString()}
       />
     </SafeAreaView>
   );

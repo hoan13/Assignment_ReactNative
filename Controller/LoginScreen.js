@@ -12,16 +12,29 @@ import {
 import React, { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
-const LoginScreen = () => {
-  const navigation = useNavigation();
+const LoginScreen = (props) => {
+  const {navigation} = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setchecked] = useState(false);
   const [security, setSecurity] = useState(true);
 
   const handleLogin = () => {
-    navigation.navigate("Home");
+      fetch("https://652670e2917d673fd76c44ab.mockapi.io/api/users")
+        .then((response) => response.json())
+        .then((data) => {
+          const user = data.find(
+            (user) => user.username === username && user.password === password
+          );
+          if (user) {
+            navigation.navigate("Home", { user: user });
+            // console.log(JSON.stringify("dữ liêu là :" + user));
+          } else {
+            Alert.alert("thông báo", "tài khoản và mật khẩu không chính xác");
+          }
+        });
   };
   const tapToRegister = () => {
     navigation.navigate("Register");
@@ -41,7 +54,7 @@ const LoginScreen = () => {
         <View style={styles.inputcontainer}>
           <Text style={{ marginLeft: 5 }}>Tên Tài khoản</Text>
           <TextInput
-            // value={username}
+            value={username}
             style={styles.textInput}
             placeholder="Nhập tên tài khoản"
             onChangeText={(text) => setUsername(text)}
@@ -117,6 +130,7 @@ const LoginScreen = () => {
           </Text>
         </View>
       </View>
+
     </ImageBackground>
   );
 };
